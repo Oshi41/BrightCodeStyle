@@ -26,65 +26,43 @@ export default [
             {
                 code: 'const a=1; const b=4;',
                 options: ['=', {before: true, after: true}],
-                errors: [
-                    {message: spaceMsg},
-                    {message: spaceMsg},
-                    {message: spaceMsg},
-                    {message: spaceMsg},
-                ],
+                errors: 4,
                 output: 'const a = 1; const b = 4;'
             },
             {
                 code: 'const a=1; const b=4;',
                 options: ['=', {after: true}],
-                errors: [
-                    {message: spaceMsg},
-                    {message: spaceMsg},
-                ],
+                errors: 2,
                 output: 'const a= 1; const b= 4;'
             },
             {
                 code: 'const a=1; const b=4;',
                 options: ['=', {before: true}],
-                errors: [
-                    {message: spaceMsg},
-                    {message: spaceMsg},
-                ],
+                errors: 2,
                 output: 'const a =1; const b =4;'
             },
             {
                 code: 'const a = 1; const b = 4;',
                 options: ['=', {after: false, before: false}],
-                errors: [
-                    {message: noSpaceMsg},
-                    {message: noSpaceMsg},
-                    {message: noSpaceMsg},
-                    {message: noSpaceMsg},
-                ],
+                errors: 4,
                 output: 'const a=1; const b=4;'
             },
             {
                 code: 'const a = 1; const b = 4;',
                 options: ['=', {before: false}],
-                errors: [
-                    {message: noSpaceMsg},
-                    {message: noSpaceMsg},
-                ],
+                errors: 2,
                 output: 'const a= 1; const b= 4;'
             },
             {
                 code: 'const a = 1; const b = 4;',
                 options: ['=', {after: false}],
-                errors: [
-                    {message: noSpaceMsg},
-                    {message: noSpaceMsg},
-                ],
+                errors: 2,
                 output: 'const a =1; const b =4;'
             },
             {
                 code: "if (true && false && 1 != 2) {}",
                 options: ['&&', {before: false, after: false}],
-                errors: Array(6).fill({message: noSpaceMsg}),
+                errors: 6,
                 output: 'if (true&&false&&1 != 2) {}'
             },
             {
@@ -99,8 +77,7 @@ export default [
                     '!==', {before: false, after: false},
                     '!=', {before: false, after: false},
                 ],
-                // 22
-                errors: Array(28).fill({message: noSpaceMsg}),
+                errors: 28,
                 output: "if ('1'<2||'1'>2&&5==4||5===5&&5!==8||6!={}) {}"
             },
             {
@@ -110,7 +87,7 @@ export default [
                     'catch', {before: true, after: true},
                     'finally', {before: true, after: true},
                 ],
-                errors: Array(5).fill({message: spaceMsg}),
+                errors: 5,
                 output: 'try {} catch {} finally {}'
             },
             {
@@ -123,7 +100,7 @@ export default [
                     'finally', {before: true, after: true},
                     'void', {before: true, after: true},
                 ],
-                errors: Array(11).fill({message: spaceMsg}),
+                errors: 11,
                 output: "const t= typeof (12); delete (t.log); try {} catch {} finally {}; void [];"
             },
             {
@@ -133,7 +110,7 @@ export default [
                     "if", {before: true, after: true},
                     "else", {before: true, after: true},
                 ],
-                errors: Array(5).fill({message: spaceMsg})
+                errors: 5
             },
 
             {
@@ -142,7 +119,7 @@ export default [
                 options: [
                     "async", {before: true, after: true}
                 ],
-                errors: Array(2).fill({message: spaceMsg})
+                errors: 2
             },
             {
                 code: `switch('123'){case '123':}`,
@@ -151,7 +128,7 @@ export default [
                     "switch", {before: true, after: true},
                     "case", {before: true, after: true},
                 ],
-                errors: Array(2).fill({message: spaceMsg})
+                errors: 2
             },
             {
                 code: `for(let a in(array)){};for(let a of(array)){}`,
@@ -161,7 +138,7 @@ export default [
                     'in', {before: true, after: true},
                     'of', {before: true, after: true},
                 ],
-                errors: Array(5).fill({message: spaceMsg})
+                errors: 5
             },
         ]
     }

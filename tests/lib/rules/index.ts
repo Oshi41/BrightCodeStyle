@@ -4,6 +4,7 @@ import defaultExportAliasSpec from "./default-export-alias.spec";
 import curlyBraceManageSpec from "./curly-brace-manage.spec";
 import spacingManageSpec from "./spacing-manage.spec";
 import preferSimpleNullCheckSpec from "./prefer-simple-null-check.spec";
+import noUndefinedReturnsSpec from "./no-undefined-returns.spec";
 
 const tester = new RuleTester({
     parserOptions: {
@@ -23,7 +24,7 @@ export type ModuleTest = [
 ]
 
 const testArray: ModuleTest[] = [ exportsAlias, defaultExportAliasSpec, curlyBraceManageSpec, spacingManageSpec,
-    preferSimpleNullCheckSpec];
+    preferSimpleNullCheckSpec, noUndefinedReturnsSpec];
 
 for (let [text, rule, opts] of testArray) {
     tester.run(text, rule, opts);

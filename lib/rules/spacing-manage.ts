@@ -1,15 +1,14 @@
 import {AST, Rule} from "eslint";
+import * as ESTree from "estree";
 import RuleModule = Rule.RuleModule;
 import Node = Rule.Node;
 import Token = AST.Token;
 import RuleContext = Rule.RuleContext;
 import RuleFixer = Rule.RuleFixer;
 import NodeParentExtension = Rule.NodeParentExtension;
-import {BinaryOperator, ForInStatement, ForOfStatement, VariableDeclarator, Property, ArrowFunctionExpression} from "estree";
-import * as ESTree from "estree";
 
 const binaries = [
-     '=='
+    '=='
     , '!='
     , '==='
     , '!=='
@@ -48,11 +47,11 @@ const binaries = [
 ];
 
 const unary = [
-    '-' , '+' , '!' , '~' , '--', '++', 'typeof' , 'void' , 'delete'
+    '-', '+', '!', '~', '--', '++', 'typeof', 'void', 'delete'
 ];
 
 const keywords = ["try", 'finally', 'if', 'else', 'catch', 'async', 'while', 'do', 'switch', 'case', 'function',
-'in', 'of', 'for'];
+    'in', 'of', 'for'];
 
 export default {
     meta: {
@@ -71,8 +70,8 @@ export default {
                     {
                         type: "object",
                         properties: {
-                            before: { type: "boolean"},
-                            after: { type: "boolean"}
+                            before: {type: "boolean"},
+                            after: {type: "boolean"}
                         }
                     }
                 ]
@@ -87,16 +86,16 @@ function create(context: Rule.RuleContext): Rule.RuleListener {
     const sourceCode = context.getSourceCode();
     const result = {} as Rule.RuleListener;
 
-    const unaryRules: [string, boolean|undefined, boolean|undefined][] = [];
-    const binaryRules: [string, boolean|undefined, boolean|undefined][] = [];
-    const tryRules: [string, boolean|undefined, boolean|undefined][] = [];
-    const forRules: [string, boolean|undefined, boolean|undefined][] = [];
-    const ifRules: [string, boolean|undefined, boolean|undefined][] = [];
-    const whileRules: [string, boolean|undefined, boolean|undefined][] = [];
+    const unaryRules: [string, boolean | undefined, boolean | undefined][] = [];
+    const binaryRules: [string, boolean | undefined, boolean | undefined][] = [];
+    const tryRules: [string, boolean | undefined, boolean | undefined][] = [];
+    const forRules: [string, boolean | undefined, boolean | undefined][] = [];
+    const ifRules: [string, boolean | undefined, boolean | undefined][] = [];
+    const whileRules: [string, boolean | undefined, boolean | undefined][] = [];
 
 
-    for (let i = 0; i < context.options.length - 1; i+=2) {
-        const {before, after} = context.options[i+1];
+    for (let i = 0; i < context.options.length - 1; i += 2) {
+        const {before, after} = context.options[i + 1];
         if (before === undefined && after === undefined)
             continue;
 
@@ -149,7 +148,7 @@ function create(context: Rule.RuleContext): Rule.RuleListener {
         if (unary.includes(key)) {
             unaryRules.push([key, before, after]);
         }
-        if (binaries.includes(key)){
+        if (binaries.includes(key)) {
             binaryRules.push([key, before, after]);
         }
     }
@@ -236,10 +235,11 @@ function create(context: Rule.RuleContext): Rule.RuleListener {
         }
     }
 }
+
 /**
  * ___FIRST-TOKEN___REST-OF-THE-NODE
  */
-function checkSpaceNearFirstToken(context: RuleContext, node: Node, before: boolean|undefined, after: boolean|undefined) {
+function checkSpaceNearFirstToken(context: RuleContext, node: Node, before: boolean | undefined, after: boolean | undefined) {
     if (before !== undefined) {
         checkNode(
             context,
@@ -262,14 +262,14 @@ function checkSpaceNearFirstToken(context: RuleContext, node: Node, before: bool
 /**
  * NODE-START___TOKEN___NODE_END
  */
-function checkSpaceNearTokensInsideNode(context: RuleContext, node: Node, tokenName: string, before: boolean|undefined, after: boolean|undefined) {
+function checkSpaceNearTokensInsideNode(context: RuleContext, node: Node, tokenName: string, before: boolean | undefined, after: boolean | undefined) {
     let source = context.getSourceCode();
     let first = source.getFirstToken(node);
     if (first) {
         let last = source.getLastToken(node);
         if (last) {
             let tokens = source.getTokensBetween(first as Token, last as Token, token => token.value == tokenName);
-            if (first.value === tokenName){
+            if (first.value === tokenName) {
                 tokens.push(first);
             }
             if (first !== last && last.value === tokenName) {
@@ -326,15 +326,18 @@ function checkSpaceNearLastToken(context: RuleContext, node: Node, before: boole
     }
 }
 
-function checkNode(context: RuleContext, node: Node, first: Token|null, second: Token|null, together: boolean) {
+function checkNode(context: RuleContext, node: Node, first: Token | null, second: Token | null, together: boolean) {
     if (!first && !second)
         return;
 
-    if (!first){
+    let before = false;
+
+    if (!first) {
         first = context.getSourceCode().getTokenBefore(second as Token);
     }
-    if (!second){
+    if (!second) {
         second = context.getSourceCode().getTokenAfter(first as Token);
+        before = false;
     }
 
     // did not find border tokens
@@ -345,15 +348,15 @@ function checkNode(context: RuleContext, node: Node, first: Token|null, second: 
     if (!fix)
         return;
 
-    context.report({
-        node,
-        message: `${together ? "Do not need" : "Need"} space here`,
-        fix
-    });
+    const message = `${together ? "Do not need" : "Need"} space ${before ? 'before' : 'after'} ` +
+        (before && context.getSourceCode().getTokenBefore(first) || context.getSourceCode().getTokenAfter(second))
+            ?.value;
+
+    context.report({ node, message, fix });
     return node;
 }
 
-function fixSpace(left: Node|Token, right: Node|Token, shouldBeTogether: boolean): Rule.ReportFixer | null {
+function fixSpace(left: Node | Token, right: Node | Token, shouldBeTogether: boolean): Rule.ReportFixer | null {
     let actuallyTogether = !spaceBetween(left, right);
     if (actuallyTogether === shouldBeTogether)
         return null;
@@ -369,16 +372,16 @@ function fixSpace(left: Node|Token, right: Node|Token, shouldBeTogether: boolean
         : fixer.insertTextAfterRange(left.range, " ");
 }
 
-function spaceBetween(left: Node|Token, right: Node|Token): boolean {
-    if (left.range && right.range){
+function spaceBetween(left: Node | Token, right: Node | Token): boolean {
+    if (left.range && right.range) {
         return left.range[1] < right.range[0];
     }
 
     return false;
 }
 
-function canRemoveSpace(left: Node|Token, right: Node|Token): boolean {
-    if (left.type === right.type){
+function canRemoveSpace(left: Node | Token, right: Node | Token): boolean {
+    if (left.type === right.type) {
         if (left.type === "Keyword" || left.type === "Identifier")
             return false;
     }

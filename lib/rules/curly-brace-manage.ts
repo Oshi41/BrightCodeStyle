@@ -110,19 +110,13 @@ function checkBraces(node: Node, start: Token | null, end: Token | null, sameLin
     if (sameLine === actuallySameLine)
         return;
 
-    if (!sameLine){
-        context.report({
-            node,
-            message: `${node.type} requires a new line for brace`,
-            fix: fixer => fixer.insertTextBeforeRange(end.range, "\n")
-        })
-    } else {
-        context.report({
-            node,
-            message: `${node.type} do not need a new line for brace`,
-            fix: fixer => fixer.replaceTextRange([start.range[1], end.range[0]], " ")
-        })
-    }
+    context.report({
+        node,
+        message: `${node.type} ${sameLine ? 'do not need' : 'requires'} a new line for brace`,
+        fix: fixer => sameLine
+            ? fixer.replaceTextRange([start.range[1], end.range[0]], " ")
+            : fixer.insertTextBeforeRange(end.range, "\n")
+    });
 }
 
 /**
