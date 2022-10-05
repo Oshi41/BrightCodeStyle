@@ -8,7 +8,8 @@ import Token = AST.Token;
 import SourceLocation = AST.SourceLocation;
 import Range = AST.Range;
 
-type Logics = "new_line" | "same_line";
+const LogicsString = ['new', 'same', 'new_for_long_declaration'];
+type Logics = typeof LogicsString[number];
 
 export default {
     meta: {
@@ -26,11 +27,12 @@ export default {
                         type: 'object',
                         properties: {
                             start: {
-                                oneOf: [{enum: ['same_line', "new_line"]}],
+                                oneOf: [{enum: LogicsString}],
                             },
                             end: {
-                                oneOf: [{enum: ['same_line', "new_line"]}],
+                                oneOf: [{enum: LogicsString.slice(0, 2)}],
                             },
+
                         }
                     }
                 ]
@@ -46,10 +48,13 @@ function create(context: RuleContext): RuleListener {
     let options = context.options;
 
     return {
-        ['*']: visitEveryNode
+        ClassBody: visitNode,
+        BlockStatement: visitNode,
+        ObjectExpression: visitNode,
+        ExportNamedDeclaration: visitNode,
     };
 
-    function visitEveryNode(node: Node): void {
+    function visitNode(node: Node): void {
         if (!isCurly(node))
             return;
 
@@ -63,7 +68,7 @@ function create(context: RuleContext): RuleListener {
                 checkBraces(actualNode,
                     sourceCode.getTokenBefore(curlyStart),
                     curlyStart,
-                    start === 'same_line',
+                    start,
                     context);
             }
         }
@@ -74,7 +79,7 @@ function create(context: RuleContext): RuleListener {
                 checkBraces(actualNode,
                     sourceCode.getTokenBefore(curlyEnd),
                     curlyEnd,
-                    end === "same_line",
+                    end,
                     context);
             }
         }
@@ -102,18 +107,48 @@ function isCurlyBraces(token: Token): boolean {
     return v === '{' || v === '}';
 }
 
-function checkBraces(node: Node, start: Token | null, end: Token | null, sameLine: boolean, context: RuleContext): void {
+function checkBraces(node: Node, start: Token | null, end: Token | null, sameLine: Logics, context: RuleContext): void {
     if (!node || !start || !end)
         return;
 
     let actuallySameLine = start.loc.start.line === end.loc.start.line;
-    if (sameLine === actuallySameLine)
-        return;
+    switch (sameLine) {
+        case 'new_for_long_declaration':
+            // obtaining very first token of node declaration
+            let firstsNodeToken = context.getSourceCode().getFirstToken(node);
+            if (!firstsNodeToken)
+                return;
+
+            // single line declaration
+            if (firstsNodeToken.loc.start.line === start.loc.start.line) {
+                // should be on the same line
+                if (actuallySameLine)
+                    return;
+            } else {
+                //should be on new line
+                if (!actuallySameLine)
+                    return;
+            }
+
+            break;
+
+        case 'new':
+            if (!actuallySameLine)
+                return;
+
+            break;
+
+        case 'same':
+            if (actuallySameLine)
+                return;
+
+            break;
+    }
 
     context.report({
         node,
-        message: `${node.type} ${sameLine ? 'do not need' : 'requires'} a new line for brace`,
-        fix: fixer => sameLine
+        message: `${node.type} ${sameLine === 'same' ? 'do not need' : 'requires'} a new line for brace`,
+        fix: fixer => sameLine === 'same'
             ? fixer.replaceTextRange([start.range[1], end.range[0]], " ")
             : fixer.insertTextBeforeRange(end.range, "\n")
     });

@@ -8,41 +8,49 @@ export default [
         valid: [
             {
                 code:`if (1 == true) { }`,
-                options: ["IfStatement", {start: 'same_line', end: 'same_line'}]
+                options: ["IfStatement", {start: 'same', end: 'same'}]
             },
             {
                 code:`if (1 == true)
 { }`,
-                options: ["IfStatement", {start: 'new_line', end: 'same_line'}]
+                options: ["IfStatement", {start: 'new', end: 'same'}]
             },
             {
                 code:`if (1 == true)
 {
 }`,
-                options: ["IfStatement", {start: 'new_line', end: 'new_line'}]
+                options: ["IfStatement", {start: 'new', end: 'new'}]
             },
             {
                 code: 'if (1==2){};for(;;){};while(true){};try{}catch{}finally{}',
                 options: [
-                    "IfStatement", {start: 'same_line', end: 'same_line'},
-                    "WhileStatement", {start: 'same_line', end: 'same_line'},
-                    "ForStatement", {start: 'same_line', end: 'same_line'},
-                    "TryStatement", {start: 'same_line', end: 'same_line'},
-                    "CatchClause", {start: 'same_line', end: 'same_line'},
+                    "IfStatement", {start: 'same', end: 'same'},
+                    "WhileStatement", {start: 'same', end: 'same'},
+                    "ForStatement", {start: 'same', end: 'same'},
+                    "TryStatement", {start: 'same', end: 'same'},
+                    "CatchClause", {start: 'same', end: 'same'},
                 ]
-            }
+            },
+            {
+                code: `function a(first, second,
+                third)
+{
+                    foo();
+                }`,
+                options: ['FunctionDeclaration', {start: 'new_for_long_declaration'}],
+            },
         ],
         invalid: [
             {
                 code:`if (1 == true){ }`,
-                options: ["IfStatement", {start: 'new_line'}],
+                options: ["IfStatement", {start: 'new'}],
                 errors: [{message: getMsg("IfStatement", true)}],
                 output: `if (1 == true)
 { }`
             },
             {
                 code:`if (1 == true){ }`,
-                options: ["IfStatement", {end: 'new_line'}],
+                options: ["IfStatement", {end: 'new'}],
                 errors: [{message: getMsg("IfStatement", true)}],
                 output: `if (1 == true){ 
 }`
@@ -50,12 +58,12 @@ export default [
             {
                 code: `if (1==2){};for(;;){};while(true){};try{}catch{}finally{}`,
                 options: [
-                    "IfStatement", {end: 'new_line', },
-                    "ForStatement", {end: 'new_line', },
-                    "WhileStatement", {end: 'new_line', },
-                    "TryStatement", {end: 'new_line', },
-                    "CatchClause", {end: 'new_line', },
-                    "FinalStatement", {end: 'new_line', },
+                    "IfStatement", {end: 'new', },
+                    "ForStatement", {end: 'new', },
+                    "WhileStatement", {end: 'new', },
+                    "TryStatement", {end: 'new', },
+                    "CatchClause", {end: 'new', },
+                    "FinalStatement", {end: 'new', },
                 ],
                 errors: [
                     {message: getMsg("IfStatement", true)},
@@ -76,12 +84,12 @@ export default [
             {
                 code: `if (1==2){};for(;;){};while(true){};try{}catch{}finally{}`,
                 options: [
-                    "IfStatement", {start: "new_line", end: 'new_line', },
-                    "ForStatement", {start: "new_line", end: 'new_line', },
-                    "WhileStatement", {start: "new_line", end: 'new_line', },
-                    "TryStatement", {start: "new_line", end: 'new_line', },
-                    "CatchClause", {start: "new_line", end: 'new_line', },
-                    "FinalStatement", {start: "new_line", end: 'new_line', },
+                    "IfStatement", {start: "new", end: 'new', },
+                    "ForStatement", {start: "new", end: 'new', },
+                    "WhileStatement", {start: "new", end: 'new', },
+                    "TryStatement", {start: "new", end: 'new', },
+                    "CatchClause", {start: "new", end: 'new', },
+                    "FinalStatement", {start: "new", end: 'new', },
                 ],
                 errors: [
                     {message: getMsg("IfStatement", true)},
@@ -113,7 +121,7 @@ export default [
             },
             {
                 code: `const obj = {prop1: 1, prop2: true, prop3: '123', prop4: function(){}, prop5: {}}`,
-                options: ["ObjectExpression", {start: "new_line", end: "new_line"}],
+                options: ["ObjectExpression", {start: "new", end: "new"}],
                 errors: [
                     {message: getMsg("ObjectExpression", true)},
                     {message: getMsg("ObjectExpression", true)},
@@ -125,6 +133,19 @@ export default [
 {
 }
 }`,
+            },
+            {
+                code: `function a(first, second,
+                third){
+                    foo();
+                }`,
+                output: `function a(first, second,
+                third)
+{
+                    foo();
+                }`,
+                errors: 1,
+                options: ['FunctionDeclaration', {start: 'new_for_long_declaration'}],
             }
         ]
     }

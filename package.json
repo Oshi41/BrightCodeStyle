@@ -1,5 +1,7 @@
 {
-  "name": "code_style",
+  "name": "eslint-pligin-bright",
+  "description": "Additional ESLint's rule using by Bright Data company",
+  "type": "module",
   "version": "1.0.0",
   "dependencies": {
     "eslint": "^8.24.0",
@@ -13,6 +15,6 @@
     "@types/expect": "^24.3.0"
   },
   "scripts": {
-    "test": "ts-mocha -p tsconfig.json tests/**/*.ts"
+    "test": "ts-mocha -p tsconfig.json tests/lib/rules/index.ts"
   }
 }
