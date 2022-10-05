@@ -4,18 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3b0767af-3db2-4c35-9460-03bcc780f9a9" name="Changes" comment="no 'return undefined' rule">
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/rules/require-rules.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/data/pkg/util/locl.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/data/reqiure_test.invilid.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/data/require_test.valid.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/lib/rules/require-rules.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/rules/curly-brace-manage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/rules/curly-brace-manage.ts" afterDir="false" />
+    <list default="true" id="3b0767af-3db2-4c35-9460-03bcc780f9a9" name="Changes" comment="some more fixes&#10;require-rules dom't have tests!">
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/lib/rules/curly-brace-manage.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/lib/rules/curly-brace-manage.spec.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +90,7 @@
       <workItem from="1664692959555" duration="55574000" />
       <workItem from="1664802137653" duration="27057000" />
       <workItem from="1664881121980" duration="2261000" />
-      <workItem from="1664908583612" duration="30825000" />
+      <workItem from="1664908583612" duration="31145000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1664836683109</created>
@@ -116,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664883380593</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="some more fixes&#10;require-rules dom't have tests!">
+      <created>1665003924657</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1665003924657</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +133,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
     <MESSAGE value="no 'return undefined' rule" />
-    <option name="LAST_COMMIT_MESSAGE" value="no 'return undefined' rule" />
+    <MESSAGE value="some more fixes&#10;require-rules dom't have tests!" />
+    <option name="LAST_COMMIT_MESSAGE" value="some more fixes&#10;require-rules dom't have tests!" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

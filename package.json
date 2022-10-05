@@ -1,5 +1,5 @@
 {
-  "name": "eslint-pligin-bright",
+  "name": "eslint-plugin-bright",
   "description": "Additional ESLint's rule using by Bright Data company",
   "type": "module",
   "version": "1.0.0",
